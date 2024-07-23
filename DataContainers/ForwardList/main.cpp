@@ -298,7 +298,7 @@ ForwardList operator+(const ForwardList& left, const ForwardList& right)
 //#define RANGE_BASED_FOR_ARRAY
 //#define RANGE_BASED_FOR_LIST
 //#define OPERATOR_PLUS_CHECK
-#define FORWARD_LIST_PREFORMANCE_TEST
+//#define FORWARD_LIST_PREFORMANCE_TEST
 
 void main()
 {
@@ -384,6 +384,7 @@ void main()
 	list2.print();
 #endif // OPERATOR_PLUS_CHECK
 
+#if FORWARD_LIST_PREFORMANCE_TEST
 	int n;
 	cout << "Введите размер списка: "; cin >> n;
 	ForwardList list;
@@ -397,11 +398,22 @@ void main()
 	cout << endl;
 	//for (int i : list)cout << i << tab; cout << endl;
 	clock_t end = clock();
-	cout << "Data loaded for " << double(end-start)/CLOCKS_PER_SEC << endl;
+	cout << "Data loaded for " << double(end - start) / CLOCKS_PER_SEC << endl;
 	cout << "Copying list...." << endl;
 	start = clock();
 	ForwardList list2 = list;
 	//for (int i : list2)cout << i << tab; cout << endl;
 	end = clock();
 	cout << "List copied for " << double(end - start) / CLOCKS_PER_SEC << endl;
+#endif // FORWARD_LIST_PREFORMANCE_TEST
+
+	int n = 10;
+	cout << "Set list size: " << endl;
+	ForwardList list;
+	for (int i = 0; i < n; i++)
+	{
+		list.push_back(rand() % 100);
+	}
+	list.print();
+
 }
