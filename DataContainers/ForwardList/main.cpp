@@ -7,6 +7,8 @@ using std::endl;
 
 #define tab "\t"
 
+#define DEBUG
+
 class Element
 {
 	int Data;
@@ -29,6 +31,7 @@ public:
 	}
 	friend class ForwardList;
 	friend class Iterator;
+	friend class Stack;
 };
 
 int Element::count = 0;	//определение статической переменной
@@ -86,6 +89,7 @@ public:
 
 class ForwardList
 {
+protected:
 	//Forward - односвязный, однонаправленный
 	Element* Head;
 	unsigned int size;
@@ -221,12 +225,14 @@ public:
 	}
 
 	//					Removing elements:
-	void pop_front()
+	int pop_front()
 	{
 		Element* Erased = Head;	//1) Запоминаем адрес удаляемого элемента
 		Head = Head->pNext;	//2) Исключаем удаляемый элемент из списка
+		int Data = Erased->Data;
 		delete Erased;	//3) Удаляем элемент из памяти
 		size--;
+		return Data;
 	}
 	void pop_back()
 	{
@@ -239,14 +245,14 @@ public:
 		Temp->pNext = nullptr;
 		size--;
 	}
-	void erase(int index)
+	int erase(int index)
 	{
 		if (index == 0)return pop_front();
 
 		Element* Temp = Head;
 		for (int i = 0; i < index - 1; i++)
 		{
-			if (Temp == nullptr)return;
+			if (Temp == nullptr)return 0;
 			Temp = Temp->pNext;
 		}
 		Element* Erased = Temp->pNext;
@@ -292,6 +298,35 @@ ForwardList operator+(const ForwardList& left, const ForwardList& right)
 		result.push_back(*it);
 	return result;
 }
+
+class Stack :protected ForwardList
+{
+public:
+	void push(int Data)
+	{
+		push_front(Data);
+	}
+	int pop()
+	{
+		return pop_front();
+	}
+	int height()const
+	{
+		return size;
+	}
+	int peak()const
+	{
+		return Head->Data;
+	}
+};
+class Stack2 :public Stack
+{
+public:
+	int get_height()const
+	{
+		return ForwardList::size;
+	}
+};
 
 //#define BASE_CHECK
 //#define INSERT_CHECK
@@ -407,13 +442,28 @@ void main()
 	cout << "List copied for " << double(end - start) / CLOCKS_PER_SEC << endl;
 #endif // FORWARD_LIST_PREFORMANCE_TEST
 
-	int n = 10;
-	cout << "Set list size: " << endl;
-	ForwardList list;
+	int n;
+	cout << "Set list size: " << endl; cin >> n;
+	Stack stack;
 	for (int i = 0; i < n; i++)
 	{
-		list.push_back(rand() % 100);
+		stack.push(rand() % 100);
 	}
-	list.print();
+	//list.print();
+	//for (int i = 0; i < stack.height(); i++)
+	//{
+	//	cout << stack.pop() << endl;
+	//}
+	while (stack.height())
+	{
+		cout << stack.pop() << "\t";
+	}
+	cout << endl;
+
+	Stack2 stack2;
+	stack2.push(3);
+	stack2.push(5);
+	stack2.push(8);
+	cout << stack2.get_height();
 
 }
